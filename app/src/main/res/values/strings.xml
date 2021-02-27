@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Ybrid Example App</string>
+    <string name="label_play">Play</string>
+    <string name="label_swap">Swap</string>
+    <string name="label_stop">Stop</string>
+
+    <string name="status_ready">Ready</string>
 </resources>
