@@ -2,6 +2,7 @@ package io.ybrid.app.example.android.ng;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import io.ybrid.app.example.android.ng.player.AndroidMetadataConsumer;
 import io.ybrid.app.example.android.ng.player.AndroidPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_play).setOnClickListener(v -> player.play());
         findViewById(R.id.button_swap).setOnClickListener(v -> player.swap());
         findViewById(R.id.button_stop).setOnClickListener(v -> player.stop());
+
+        player.setMetadataConsumer(new AndroidMetadataConsumer(player::stop, findViewById(R.id.status_display)));
     }
 
     @Override
