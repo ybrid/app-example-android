@@ -2,6 +2,7 @@ package io.ybrid.app.example.android.ng.player;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.LocaleList;
 import io.ybrid.api.*;
 import io.ybrid.player.player.MetadataConsumer;
 import io.ybrid.player.player.SessionClient;
@@ -12,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This abstracts the {@link Session}, and {@link YbridPlayer}
@@ -36,7 +40,16 @@ public final class AndroidPlayer implements Closeable {
         // Create a MediaEndpoint, and a Session from it.
         try {
             final @NotNull MediaEndpoint mediaEndpoint = new MediaEndpoint(URI.create(STREAM_URI));
+            final @NotNull LocaleList list = LocaleList.getAdjustedDefault();
+            final @NotNull List<Locale.LanguageRange> languages = new ArrayList<>(list.size());
 
+            for (int i = 0; i < list.size(); i++) {
+                // Use a weight of 1.0 for the default language, and 0.5 for every other language.
+                //noinspection MagicNumber
+                languages.add(new Locale.LanguageRange(list.get(i).toLanguageTag(), i == 0 ? 1 : 0.5));
+            }
+
+            mediaEndpoint.setAcceptedLanguages(languages);
             mediaEndpoint.forceApiVersion(ApiVersion.YBRID_V1);
             mediaEndpoint.getWorkarounds().disable(Workaround.WORKAROUND_SKIP_SILENCE);
 
