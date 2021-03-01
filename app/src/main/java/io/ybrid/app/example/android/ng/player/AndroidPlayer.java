@@ -3,9 +3,11 @@ package io.ybrid.app.example.android.ng.player;
 import android.os.Handler;
 import android.os.HandlerThread;
 import io.ybrid.api.*;
+import io.ybrid.player.player.MetadataConsumer;
 import io.ybrid.player.player.SessionClient;
 import io.ybrid.player.player.YbridPlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -21,6 +23,7 @@ public final class AndroidPlayer implements Closeable {
     private final @NotNull HandlerThread handlerThread;
     private final @NotNull Handler handler;
     private final @NotNull Session session;
+    private @Nullable MetadataConsumer metadataConsumer;
     private SessionClient player;
 
     {
@@ -54,6 +57,12 @@ public final class AndroidPlayer implements Closeable {
         });
     }
 
+    public synchronized void setMetadataConsumer(@NotNull MetadataConsumer metadataConsumer) {
+        this.metadataConsumer = metadataConsumer;
+        if (player != null)
+            player.setMetadataConsumer(metadataConsumer);
+    }
+
     /**
      * Start Playback.
      */
@@ -64,6 +73,8 @@ public final class AndroidPlayer implements Closeable {
                     if (player != null)
                         return;
                     player = new YbridPlayer(session, null, AndroidAudioOutput::new);
+                    if (metadataConsumer != null)
+                        player.setMetadataConsumer(metadataConsumer);
                     player.prepare();
                     player.play();
                 }
