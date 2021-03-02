@@ -3,7 +3,9 @@ package io.ybrid.app.example.android.ng.player;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.LocaleList;
-import io.ybrid.api.*;
+import io.ybrid.api.MediaEndpoint;
+import io.ybrid.api.Session;
+import io.ybrid.api.SwapMode;
 import io.ybrid.player.player.MetadataConsumer;
 import io.ybrid.player.player.SessionClient;
 import io.ybrid.player.player.YbridPlayer;
@@ -50,7 +52,6 @@ public final class AndroidPlayer implements Closeable {
             }
 
             mediaEndpoint.setAcceptedLanguages(languages);
-            mediaEndpoint.forceApiVersion(ApiVersion.YBRID_V1);
 
             session = mediaEndpoint.createSession();
         } catch (IOException e) {
