@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    @NotNull AndroidPlayer player = new AndroidPlayer();
+    private final @NotNull AndroidPlayer player = new AndroidPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
