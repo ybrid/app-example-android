@@ -31,7 +31,7 @@ public class AndroidAudioOutput implements AudioOutput {
      * @throws IOException Thrown on backend related I/O-Error.
      */
     @Override
-    public void prepare(@NotNull PCMDataBlock block) throws IOException {
+    public synchronized void prepare(@NotNull PCMDataBlock block) throws IOException {
         final int sampleRate = block.getSampleRate();
         final int channels = block.getNumberOfChannels();
         final AudioAttributes.Builder attributesBuilder = new AudioAttributes.Builder();
@@ -97,7 +97,7 @@ public class AndroidAudioOutput implements AudioOutput {
      * @throws IOException Thrown on backend related I/O-Error.
      */
     @Override
-    public void write(@NotNull PCMDataBlock block) throws IOException {
+    public synchronized void write(@NotNull PCMDataBlock block) throws IOException {
         final short[] buffer = block.getData();
         final int ret;
 
@@ -132,7 +132,10 @@ public class AndroidAudioOutput implements AudioOutput {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
+        if (audioTrack == null)
+            return;
+
         audioTrack.flush();
         audioTrack.stop();
         audioTrack.release();
