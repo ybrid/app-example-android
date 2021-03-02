@@ -51,7 +51,6 @@ public final class AndroidPlayer implements Closeable {
 
             mediaEndpoint.setAcceptedLanguages(languages);
             mediaEndpoint.forceApiVersion(ApiVersion.YBRID_V1);
-            mediaEndpoint.getWorkarounds().disable(Workaround.WORKAROUND_SKIP_SILENCE);
 
             session = mediaEndpoint.createSession();
         } catch (IOException e) {
