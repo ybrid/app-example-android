@@ -21,5 +21,16 @@ any activity. A background service could be useful here.
 This player prints stack traces on a number of non-fatal causes. This is for demonstration purpose only.
 The calls to `printStackTrace()` should be removed accordingly in a real application.
 
+### Supported Android versions
+
+This demo supports API level 26 and above. As of 2021-03-05 the minimum version as supported by Google is 27.
+Supporting outdated versions (versions no longer supported upstream) is not within the scope of this demo.
+If you need support for those versions you may need to
+* use our android-java-compat package located at https://github.com/ybrid/android-java-compat
+* (before API level 24) convert to the usage of MediaEndpoint.setAcceptedLanguages() to the old API.
+
+Versions before API level 22 are generally not supported.
+Please consider contacting us if you want to use our SDK on API level lower than 24.
+
 ## Copyright
 Copyright (c) 2019-2021 nacamar GmbH, Germany. See [MIT License](LICENSE) for details.
