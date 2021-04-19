@@ -12,14 +12,16 @@
             android:layout_height="wrap_content" android:id="@+id/status_display"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/button_play" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintVertical_chainStyle="spread"/>
     <Button
             android:text="@string/label_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/button_play"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/button_swap"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintTop_toBottomOf="@+id/status_display" app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/status_display"
+            android:layout_marginTop="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_change_uri"/>
     <Button
             android:text="@string/label_stop"
             android:layout_width="wrap_content"
@@ -33,4 +35,12 @@
             app:layout_constraintStart_toEndOf="@+id/button_play"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/button_stop"
             app:layout_constraintTop_toTopOf="@+id/button_play"/>
+    <Button
+            android:text="@string/label_change_URI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/button_change_uri"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_play"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

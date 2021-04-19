@@ -18,17 +18,18 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This abstracts the {@link Session}, and {@link YbridPlayer}
  * in a way suitable for Android.
  */
 public final class AndroidPlayer implements Closeable {
-    private static final @NotNull String STREAM_URI = "https://stagecast.ybrid.io/adaptive-demo";
+    private static final @NotNull URI STREAM_URI = URI.create("https://stagecast.ybrid.io/adaptive-demo");
 
     private final @NotNull HandlerThread handlerThread;
     private final @NotNull Handler handler;
-    private final @NotNull Session session;
+    private @Nullable Session session;
     private @Nullable MetadataConsumer metadataConsumer;
     private SessionClient player;
 
@@ -39,9 +40,15 @@ public final class AndroidPlayer implements Closeable {
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
 
+        switchURI(STREAM_URI);
+    }
+
+    public void switchURI(@NotNull URI uri) {
+        final @NotNull Session nextSession;
+
         // Create a MediaEndpoint, and a Session from it.
         try {
-            final @NotNull MediaEndpoint mediaEndpoint = new MediaEndpoint(URI.create(STREAM_URI));
+            final @NotNull MediaEndpoint mediaEndpoint = new MediaEndpoint(uri);
             final @NotNull LocaleList list = LocaleList.getAdjustedDefault();
             final @NotNull List<Locale.LanguageRange> languages = new ArrayList<>(list.size());
 
@@ -53,7 +60,7 @@ public final class AndroidPlayer implements Closeable {
 
             mediaEndpoint.setAcceptedLanguages(languages);
 
-            session = mediaEndpoint.createSession();
+            nextSession = mediaEndpoint.createSession();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -62,6 +69,8 @@ public final class AndroidPlayer implements Closeable {
         // Connect the session.
         handler.post(() -> {
             try {
+                stopOnSameThread();
+                session = nextSession;
                 session.connect();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,7 +94,7 @@ public final class AndroidPlayer implements Closeable {
                 synchronized (AndroidPlayer.this) {
                     if (player != null)
                         return;
-                    player = new YbridPlayer(session, null, AndroidAudioOutput::new);
+                    player = new YbridPlayer(Objects.requireNonNull(session), null, AndroidAudioOutput::new);
                     if (metadataConsumer != null)
                         player.setMetadataConsumer(metadataConsumer);
                     player.play();
@@ -97,22 +106,25 @@ public final class AndroidPlayer implements Closeable {
         });
     }
 
+    private synchronized void stopOnSameThread() {
+        try {
+            synchronized (this) {
+                if (player != null)
+                    player.stop();
+                player = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Stop playback.
      */
     public void stop() {
         if (player != null) {
-            handler.post(() -> {
-                try {
-                    synchronized (AndroidPlayer.this) {
-                        player.stop();
-                        player = null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            });
+            handler.post(this::stopOnSameThread);
         }
     }
 

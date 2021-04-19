@@ -3,6 +3,8 @@
     <string name="label_play">Play</string>
     <string name="label_swap">Swap</string>
     <string name="label_stop">Stop</string>
+    <string name="label_change_URI">Change URI</string>
+    <string name="title_change_URI">Enter new URI</string>
 
     <string name="status_ready">Ready</string>
 </resources>
