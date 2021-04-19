@@ -1,6 +1,7 @@
 package io.ybrid.app.example.android.ng;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private void askURI() {
         final @NotNull AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final @NotNull EditText et = new EditText(this);
+        et.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         builder.setView(et);
         builder.setTitle(R.string.title_change_URI);
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> player.switchURI(URI.create(et.getText().toString())));
