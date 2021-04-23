@@ -94,7 +94,7 @@ public final class AndroidPlayer implements Closeable {
                 synchronized (AndroidPlayer.this) {
                     if (player != null)
                         return;
-                    player = new YbridPlayer(Objects.requireNonNull(session), null, AndroidAudioOutput::new);
+                    player = new YbridPlayer(Objects.requireNonNull(session));
                     if (metadataConsumer != null)
                         player.setMetadataConsumer(metadataConsumer);
                     player.play();
