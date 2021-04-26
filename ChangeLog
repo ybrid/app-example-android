@@ -1,0 +1,4 @@
+1.0.0 - UNRELEASED
+    * Initial release
+    * Supporting Player SDK 1.1.2
+    * Supporting user provided MediaEndpoints
