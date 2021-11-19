@@ -26,10 +26,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.LocaleList;
 import io.ybrid.api.MediaEndpoint;
-import io.ybrid.api.Session;
 import io.ybrid.api.SwapMode;
+import io.ybrid.api.session.Session;
+import io.ybrid.player.player.MediaController;
 import io.ybrid.player.player.MetadataConsumer;
-import io.ybrid.player.player.SessionClient;
 import io.ybrid.player.player.YbridPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,7 @@ public final class AndroidPlayer implements Closeable {
     private final @NotNull Handler handler;
     private @Nullable Session session;
     private @Nullable MetadataConsumer metadataConsumer;
-    private SessionClient player;
+    private MediaController player;
 
     {
         // Create a Thread to run the player in. This is required
@@ -112,33 +112,21 @@ public final class AndroidPlayer implements Closeable {
      */
     public void play() {
          handler.post(() -> {
-            try {
-                synchronized (AndroidPlayer.this) {
-                    if (player != null)
-                        return;
-                    player = new YbridPlayer(Objects.requireNonNull(session));
-                    if (metadataConsumer != null)
-                        player.setMetadataConsumer(metadataConsumer);
-                    player.play();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        });
+             synchronized (AndroidPlayer.this) {
+                 if (player != null)
+                     return;
+                 player = new YbridPlayer(Objects.requireNonNull(session));
+                 if (metadataConsumer != null)
+                     player.setMetadataConsumer(metadataConsumer);
+                 player.play();
+             }
+         });
     }
 
     private synchronized void stopOnSameThread() {
-        try {
-            synchronized (this) {
-                if (player != null)
-                    player.stop();
-                player = null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        if (player != null)
+            player.stop();
+        player = null;
     }
 
     /**
@@ -154,14 +142,7 @@ public final class AndroidPlayer implements Closeable {
      * Swap current item.
      */
     public void swap() {
-        handler.post(() -> {
-            try {
-                player.swapItem(SwapMode.END2END);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        });
+        handler.post(() -> player.swapItem(SwapMode.END2END));
     }
 
     @Override
