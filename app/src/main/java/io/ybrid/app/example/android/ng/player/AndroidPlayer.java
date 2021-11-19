@@ -47,7 +47,7 @@ import java.util.Objects;
  * in a way suitable for Android.
  */
 public final class AndroidPlayer implements Closeable {
-    private static final @NotNull URI STREAM_URI = URI.create("https://stagecast.ybrid.io/adaptive-demo");
+    private static final @NotNull URI STREAM_URI = URI.create("https://democast.ybrid.io/adaptive-demo");
 
     private final @NotNull HandlerThread handlerThread;
     private final @NotNull Handler handler;
