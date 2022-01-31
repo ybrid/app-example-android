@@ -1,3 +1,6 @@
+1.0.2 - 2022-01-31
+    * Updated to use new Player SDK 1.2.1
+
 1.0.1 - 2021-11-21
     * Updated to use new Player SDK 1.2.0
     * Updated default stream URI
